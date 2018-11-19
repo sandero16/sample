@@ -59,6 +59,7 @@ public class GameWindowController implements Initializable {
             System.out.println("setGame");
             this.sessiontoken=sessiontoken;
             beurt=impl.setGame(this.sessiontoken);
+            aantalgeradenParen=0;
             gekozen=new ArrayList<>();
             waardes=new ArrayList<>();
             aantalKeuzes=0;
@@ -161,7 +162,7 @@ public class GameWindowController implements Initializable {
         try {
             if (beurt) {
                 aantalKeuzes++;
-                System.out.println("aantal keuzes: "+aantalKeuzes);
+               // System.out.println("aantal keuzes: "+aantalKeuzes);
                 int temp=impl.getZet(i, sessiontoken);
                 waardes.add(temp);
                 return temp;
@@ -193,7 +194,9 @@ public class GameWindowController implements Initializable {
                     }
                 });
                 if(waardes.get(0)==waardes.get(1)){
+                    System.out.println("hier score: "+score);
                     score++;
+                    System.out.println("hier nieuwe score: "+score);
                     gekozen.clear();
                 }
                 resetKeuzes();
@@ -202,8 +205,9 @@ public class GameWindowController implements Initializable {
                 impl.changeBeurt(sessiontoken);
                 aantalKeuzes=0;
                 statuslabel.setText("het is aan de andere");
-                listen();
-
+                if(aantalgeradenParen!=8) {
+                    listen();
+                }
 
             }
         }
@@ -215,12 +219,15 @@ public class GameWindowController implements Initializable {
         beurt=true;
     }
     public void resetKeuzes(){
-        if(aantalgeradenParen!=8) {
-            System.out.println("aantalgeraden paren: "+aantalgeradenParen);
+
+        System.out.println("aantalgeraden paren: "+aantalgeradenParen+ " score: "+score);
+
+
             System.out.println("reset keuzes");
             if (waardes.get(0) == waardes.get(1)) {
-                System.out.println("ze zijn gelijk"+ waardes.get(0)+" "+waardes.get(1));
                 aantalgeradenParen++;
+                System.out.println("ze zijn gelijk"+ waardes.get(0)+" "+waardes.get(1));
+
                 gekozen.clear();
 
             }
@@ -234,7 +241,6 @@ public class GameWindowController implements Initializable {
                             System.out.println("thread kan niet slapen");
                         }
                         for (Button b : gekozen) {
-                            System.out.println("button terug gezet");
                             b.setText("*");
                         }
                         gekozen.clear();
@@ -243,38 +249,50 @@ public class GameWindowController implements Initializable {
 
             }
             waardes.clear();
+        System.out.println("aantalgeraden paren"+aantalgeradenParen);
+        if(aantalgeradenParen==8) {
+            System.out.println("open window");
+            openEndWindow();
+
         }
-        else{
-            FXMLLoader Loader=new FXMLLoader();
-            Loader.setLocation(getClass().getResource("eindeSpel.fxml"));
-            try{
-                Loader.load();
-            }
-            catch (Exception e){
-                System.out.println("failed");
-            }
-            Stage stage=new Stage();
-            eindeSpelController controller = Loader.getController();
+
+
+
+
+    }
+    public void openEndWindow(){
+        System.out.println("binnen in openendwindow");
+        FXMLLoader Loader = new FXMLLoader();
+        Loader.setLocation(getClass().getResource("eindeSpel.fxml"));
+        try {
+            Loader.load();
+        } catch (Exception e) {
+            System.out.println("failed");
+        }
+        System.out.println("1e");
+        Stage endstage=new Stage();
+        System.out.println("2");
+        eindeSpelController controller = Loader.getController();
             /*LogInController controller =Loader.getController();
             controller.setInterface(impl);*/
-            //controller.setGame(sessiontoken);
+        //controller.setGame(sessiontoken);
+        System.out.println("3");
+        controller.getResults(impl, sessiontoken, score);
+        System.out.println("4");
+        Parent root = Loader.getRoot();
+        endstage.setTitle("Game");
+        endstage.setScene(new Scene(root, 300, 275));
+        endstage.show();
 
-            controller.getResults(impl, sessiontoken, score);
-            Parent root=Loader.getRoot();
-            stage.setTitle("Game");
-            stage.setScene(new Scene(root, 300, 275));
-            stage.show();
-            Stage oldstage  = (Stage) statuslabel.getScene().getWindow();
-            oldstage.close();
+        Stage oldstage = (Stage) statuslabel.getScene().getWindow();
 
-        }
-
+        oldstage.close();
     }
     public void incomingGok(int []gok){
         int button = gok[0];
         button++;
         int waarde = gok[1];
-        System.out.println("incoming button: "+button+" waarde: "+waarde);
+       // System.out.println("incoming button: "+button+" waarde: "+waarde);
         waardes.add(waarde);
         switch (button) {
             case 1:

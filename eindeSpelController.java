@@ -11,8 +11,8 @@ public class eindeSpelController implements Initializable {
     public Counter impl;
     public int sessiontoken;
     public Label status;
-    public Label Score1;
-    public Label Score2;
+    public Label score1;
+    public Label score2;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -25,8 +25,8 @@ public class eindeSpelController implements Initializable {
             else {
                 status.setText("Je bent verloren");
             }
-            Score1.setText("jouw score: "+Integer.toString(score));
-            Score2.setText("speler 2 zijn score: "+impl.getScore(sessiontoken));
+            score1.setText("jouw score: "+Integer.toString(score));
+            score2.setText("speler 2 zijn score: "+impl.getScore(sessiontoken));
         }
         catch (Exception e){
 

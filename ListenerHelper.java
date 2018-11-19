@@ -18,6 +18,7 @@ public class ListenerHelper implements Runnable {
 
     public void run(){
         try {
+
             while (!impl.checkBeurt(sessiontoken)) {
                // System.out.println("listening");
                 //TODO null returnen als andere nog geen nieuwe keuze heeft gemaakt
